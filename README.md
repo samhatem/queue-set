@@ -1,8 +1,69 @@
-# TS Template
+# Queue Set
 
-This template by default creates a cjs and ems build for the project.
+A queue that is also a set. I'm sure there's a better name for this.
 
-## Getting Started
+## Usage
+
+### Install
+
+`yarn add queue-set`
+
+### Basic Example
+
+```typescript
+const queueSet = new QueueSet<string>();
+queueSet.enqueue("newItem");
+
+console.log(queueSet.getNextItem()) // "newItem"
+
+console.log(queueSet.dequeue()) // "newItem"
+
+console.log(queueSet.size()) // 0
+```
+
+### Constructor
+
+Create a new QueueSet
+
+```typescript
+new QueueSet<Type>(hashFunction?: HashFunction<Type>);
+```
+
+`hashFunction` is an optional argument that hashes values in the QueueSet to tell if they are distinct. This defaults to `JSON.stringify`.
+
+### enqueue
+
+Add a value to the QueueSet
+
+```typescript
+set.enqueue(value: Type): void
+```
+
+### dequeue
+
+Remove the first value from the QueueSet and return it. Returns undefined if the QueueSet is empty
+
+```typescript
+set.dequeue(): Type | undefined
+```
+
+### getNextItem
+
+Get the next item in the QueueSet
+
+```typescript
+set.getNextItem(): Type | undefined
+```
+
+### toArray
+
+Returns the set as an array
+
+```typescript
+set.toArray(): Array<Type>
+```
+
+## Contributing
 
 ### Install dependencies
 
