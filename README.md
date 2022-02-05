@@ -1,6 +1,6 @@
 # Queue Set
 
-A queue that is also a set. I'm sure there's a better name for this.
+A queue that is also a set. I'm sure there's an actual name for this data structure that isn't QueueSet.
 
 ## Usage
 
@@ -29,7 +29,7 @@ Create a new QueueSet
 new QueueSet<Type>(hashFunction?: HashFunction<Type>);
 ```
 
-`hashFunction` is an optional argument that hashes values in the QueueSet to tell if they are distinct. This defaults to `JSON.stringify`.
+`hashFunction` is an optional argument that hashes values in the QueueSet to tell if they are distinct. This defaults to `JSON.stringify` (technically this isn't a hash function because it doesn't map values to a fixed size, but the important things is that there's a unique string for each value).
 
 ### enqueue
 
