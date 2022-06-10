@@ -63,6 +63,22 @@ Returns the set as an array
 set.toArray(): Array<Type>
 ```
 
+### find
+
+Find all elements in the set that the provided callback function returns true for
+
+```typescript
+set.find(callbackFn: (element: Type, index?: number, queseSet?: QueueSet<Type>) => boolean): Array<Type>
+```
+
+### removeBatch
+
+Remove all elements in the queue that match any elements in the provided array
+
+```typescript
+set.removeBatch(items: Array<Type>): Array<Type>
+```
+
 ## Contributing
 
 ### Install dependencies

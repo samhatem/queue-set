@@ -32,6 +32,26 @@ describe("QueueSet test", () => {
             expect(nextItem).toBe(initialItem);
         });
 
+        it("filters out 1 element", () => {
+            const filteredEls = queueSet.find(element => element === initialItem);
+
+            expect(filteredEls.length).toBe(1);
+        });
+
+        it("filters out no elements", () => {
+            const filteredEls = queueSet.find(element => element !== initialItem);
+
+            expect(filteredEls.length).toBe(0);
+        });
+
+        it("removes a batch of items from the queue", () => {
+            const batch = queueSet.find(element => element === initialItem);
+
+            queueSet.removeBatch(batch);
+
+            expect(queueSet.size()).toBe(0);
+        });
+
         describe("additional enqueue", () => {
             const additionalItem = "second";
 
@@ -61,6 +81,14 @@ describe("QueueSet test", () => {
 
                 expect(arr[0]).toBe(initialItem);
                 expect(arr[1]).toBe(additionalItem);
+            });
+
+            it("removes a batch of items from the queue", () => {
+                const batch = queueSet.find(element => element === initialItem);
+
+                queueSet.removeBatch(batch);
+
+                expect(queueSet.size()).toBe(1);
             });
 
             describe("dequeue works as expected", () => {
@@ -96,6 +124,66 @@ describe("QueueSet test", () => {
                     expect(shouldBeUndefined).toBe(undefined);
                 });
             });
+        });
+    });
+
+    describe("find and batch on more complex array", () => {
+        let singleLetters: string[];
+        let doubleLetters: string[];
+
+        let ordering: string[];
+
+        beforeEach(() => {
+            while (queueSet.size()) {
+                queueSet.dequeue();
+            }
+
+            singleLetters = ["a", "b", "c"];
+            doubleLetters = ["aa", "ab", "bb", "ac", "cc"];
+
+            singleLetters.forEach((letter, i) => i < singleLetters.length / 2 && queueSet.enqueue(letter));
+            doubleLetters.forEach(letters => queueSet.enqueue(letters));
+            singleLetters.forEach(letter => queueSet.enqueue(letter));
+
+            ordering = queueSet.toArray();
+        });
+
+        it("able to find items", () => {
+            const found = queueSet.find(item => item.length === 1);
+
+            found.forEach((item, index) => {
+                expect(item).toBe(singleLetters[index]);
+            });
+
+            expect(found.length).toBe(singleLetters.length);
+        });
+
+        it("able to remove a batch of items", () => {
+            const itemsToRemove = [doubleLetters[2], singleLetters[1], singleLetters[0]];
+
+            const removedItems = queueSet.removeBatch(itemsToRemove);
+
+            expect(removedItems.length).toBe(itemsToRemove.length);
+        });
+
+        it("array has expected order after removing batch", () => {
+            const itemsToRemove = [doubleLetters[2], singleLetters[1], singleLetters[0]];
+
+            const removedItems = queueSet.removeBatch(itemsToRemove);
+
+            const expectedOrdering: string[] = [];
+
+            for (let i = 0; i < ordering.length; i++) {
+                if (!itemsToRemove.find(item => item === ordering[i])) { // eslint-disable-line
+                    expectedOrdering.push(ordering[i]);
+                }
+            }
+
+            queueSet.toArray().forEach((item, i) => {
+                expect(item).toBe(expectedOrdering[i]);
+            });
+
+            expect(removedItems.length).toBe(itemsToRemove.length);
         });
     });
 });
